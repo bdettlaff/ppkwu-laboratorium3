@@ -15,14 +15,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
 public class CalendarEndpoint {
 
-    @GetMapping("calendar/{month}")
-    public ResponseEntity<Resource> getCalendar(@PathVariable int month) throws IOException {
+    @GetMapping("calendar")
+    public ResponseEntity<Resource> getCalendar()throws IOException {
+
+        Date date = new Date();
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        int month = localDate.getMonthValue();
+
         Document doc = Jsoup.connect("http://www.weeia.p.lodz.pl/pliki_strony_kontroler/kalendarz.php?rok=2019&miesiac=" + month +"&lang=1").get();
         Elements html = doc.select("a.active");
         Elements events = doc.select ("div.InnerBox");
